@@ -61,8 +61,8 @@ public class UserDAO {
         String query = "SELECT * FROM users ORDER BY role, nom, prenom";
         List<User> users = new ArrayList<>();
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 users.add(mapResultSetToUser(rs));
@@ -282,7 +282,6 @@ public class UserDAO {
             stmt.setNull(10, Types.VARCHAR);
         }
 
-        // NOUVEAUX CHAMPS
         stmt.setInt(11, user.getHeuresPreveuesCode());
         stmt.setInt(12, user.getHeuresPreveuesConduite());
         stmt.setInt(13, user.getHeuresPreveuesParc());

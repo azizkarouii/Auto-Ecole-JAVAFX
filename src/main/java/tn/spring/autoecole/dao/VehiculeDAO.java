@@ -33,8 +33,8 @@ public class VehiculeDAO {
         String query = "SELECT * FROM vehicules ORDER BY type, marque, modele";
         List<Vehicule> vehicules = new ArrayList<>();
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 vehicules.add(mapResultSetToVehicule(rs));
@@ -47,8 +47,8 @@ public class VehiculeDAO {
         String query = "SELECT * FROM vehicules WHERE disponible = TRUE ORDER BY type, marque";
         List<Vehicule> vehicules = new ArrayList<>();
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 vehicules.add(mapResultSetToVehicule(rs));
@@ -218,8 +218,8 @@ public class VehiculeDAO {
         String query = "SELECT type, COUNT(*) as count FROM vehicules GROUP BY type";
         Map<TypePermis, Long> counts = new HashMap<>();
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 TypePermis type = TypePermis.valueOf(rs.getString("type"));
@@ -233,8 +233,8 @@ public class VehiculeDAO {
     public long countAvailable() throws SQLException {
         String query = "SELECT COUNT(*) FROM vehicules WHERE disponible = TRUE";
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             if (rs.next()) {
                 return rs.getLong(1);

@@ -47,8 +47,8 @@ public class ExamenDAO {
 
         List<Examen> examens = new ArrayList<>();
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 examens.add(mapResultSetToExamen(rs));
@@ -243,8 +243,8 @@ public class ExamenDAO {
         String query = "SELECT resultat, COUNT(*) as count FROM examens GROUP BY resultat";
         Map<ResultatExamen, Long> counts = new HashMap<>();
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 ResultatExamen resultat = ResultatExamen.valueOf(rs.getString("resultat"));
@@ -264,8 +264,8 @@ public class ExamenDAO {
             WHERE resultat IN ('REUSSI', 'ECHEC')
             """;
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             if (rs.next()) {
                 long total = rs.getLong("total");

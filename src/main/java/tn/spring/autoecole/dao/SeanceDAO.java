@@ -52,8 +52,8 @@ public class SeanceDAO {
 
         List<Seance> seances = new ArrayList<>();
 
-        try (Statement stmt = cnx.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (PreparedStatement stmt = cnx.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 seances.add(mapResultSetToSeance(rs));
