@@ -619,6 +619,7 @@ public class AdminController {
                 AlertUtils.showSuccess("Examen programmé avec succès");
                 loadExamens();
                 loadDashboardStats();
+                examensTable.refresh();
             } catch (SQLException | IllegalArgumentException e) {
                 AlertUtils.showError("Erreur", e.getMessage());
             }
@@ -638,10 +639,23 @@ public class AdminController {
         Optional<Examen> result = ExamenDialogUtil.showEditExamenDialog(selected);
         if (result.isPresent()) {
             try {
-                examenService.updateExamen(result.get());
+                Examen updatedExamen = result.get();
+
+                // Si le résultat change de EN_ATTENTE vers REUSSI, utiliser updateResultatExamen pour la progression
+                if (selected.getResultat() != updatedExamen.getResultat()
+                        && updatedExamen.getResultat() == ResultatExamen.REUSSI) {
+                    examenService.updateResultatExamen(updatedExamen.getId(), updatedExamen.getResultat());
+                } else {
+                    examenService.updateExamen(updatedExamen);
+                }
+
                 AlertUtils.showSuccess("Examen modifié avec succès");
                 loadExamens();
+                loadApprenants(); // Au cas où le niveau change
                 loadDashboardStats();
+                examensTable.refresh();
+                apprenantsTable.refresh();
+                refreshApprenantFinanceCombo();
             } catch (SQLException | IllegalArgumentException e) {
                 AlertUtils.showError("Erreur", e.getMessage());
             }
@@ -666,6 +680,10 @@ public class AdminController {
                 loadExamens();
                 loadApprenants(); // Rafraîchir car le niveau peut avoir changé
                 loadDashboardStats();
+                // Forcer le rafraîchissement des tables et ComboBox
+                examensTable.refresh();
+                apprenantsTable.refresh();
+                refreshApprenantFinanceCombo();
             } catch (SQLException | IllegalArgumentException e) {
                 AlertUtils.showError("Erreur", e.getMessage());
             }
