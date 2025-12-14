@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.spring.autoecole.controllers.MoniteurController"
+            prefHeight="800.0" prefWidth="1200.0">
+
+    <!-- Top Bar -->
+    <top>
+        <VBox style="-fx-background-color: #16a085;">
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 15;">
+                <Label text="👨‍🏫" style="-fx-font-size: 24px; -fx-text-fill: white;"/>
+                <Label fx:id="welcomeLabel" text="Bienvenue, Moniteur"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Déconnexion" onAction="#handleLogout"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- Tab Mes Séances -->
+            <Tab text="📅 Mes Séances">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Mes séances programmées" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="🔄 Actualiser" onAction="#loadSeances"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <TableView fx:id="seancesTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="seanceIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="seanceTypeCol" text="Type" prefWidth="100"/>
+                            <TableColumn fx:id="seanceDateCol" text="Date" prefWidth="120"/>
+                            <TableColumn fx:id="seanceHeureCol" text="Heure" prefWidth="100"/>
+                            <TableColumn fx:id="seanceApprenantCol" text="Apprenant" prefWidth="250"/>
+                            <TableColumn fx:id="seanceVehiculeCol" text="Véhicule" prefWidth="250"/>
+                            <TableColumn fx:id="seanceStatutCol" text="Statut" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Tab Apprenants -->
+            <Tab text="👨‍🎓 Liste des Apprenants">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="searchApprenantField" promptText="Rechercher un apprenant..." prefWidth="250"/>
+                        <ComboBox fx:id="filterNiveauCombo" promptText="Filtrer par niveau" prefWidth="150"/>
+                        <Button text="Rechercher" onAction="#searchApprenants"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Voir Parcours" onAction="#viewApprenantDetails"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <TableView fx:id="apprenantsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="apprenantIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="apprenantNomCol" text="Nom" prefWidth="120"/>
+                            <TableColumn fx:id="apprenantPrenomCol" text="Prénom" prefWidth="120"/>
+                            <TableColumn fx:id="apprenantCinCol" text="CIN" prefWidth="100"/>
+                            <TableColumn fx:id="apprenantEmailCol" text="Email" prefWidth="200"/>
+                            <TableColumn fx:id="apprenantTelCol" text="Téléphone" prefWidth="120"/>
+                            <TableColumn fx:id="apprenantTypePermisCol" text="Type Permis" prefWidth="120"/>
+                            <TableColumn fx:id="apprenantNiveauCol" text="Niveau" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Tab Véhicules Disponibles -->
+            <Tab text="🚗 Véhicules">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Disponibilité des véhicules" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <ComboBox fx:id="filterVehiculeTypeCombo" promptText="Filtrer par type" prefWidth="150"/>
+                        <Button text="Filtrer" onAction="#loadVehicules"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                        <Button text="🔄 Actualiser" onAction="#loadVehicules"
+                                style="-fx-background-color: #16a085; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <TableView fx:id="vehiculesTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="vehiculeIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="vehiculeMatriculeCol" text="Matricule" prefWidth="150"/>
+                            <TableColumn fx:id="vehiculeMarqueCol" text="Marque" prefWidth="150"/>
+                            <TableColumn fx:id="vehiculeModeleCol" text="Modèle" prefWidth="150"/>
+                            <TableColumn fx:id="vehiculeTypeCol" text="Type" prefWidth="150"/>
+                            <TableColumn fx:id="vehiculeDispoCol" text="Disponible" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>

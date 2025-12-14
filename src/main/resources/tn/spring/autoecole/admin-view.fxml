@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.spring.autoecole.controllers.AdminController"
+            prefHeight="800.0" prefWidth="1200.0">
+
+    <!-- Top Bar -->
+    <top>
+        <VBox style="-fx-background-color: #2c3e50;">
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 15;">
+                <Label text="🚗" style="-fx-font-size: 24px; -fx-text-fill: white;"/>
+                <Label fx:id="welcomeLabel" text="Bienvenue, Administrateur"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Déconnexion" onAction="#handleLogout"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- Tab Dashboard -->
+            <Tab text="📊 Dashboard">
+                <ScrollPane fitToWidth="true" style="-fx-background: white;">
+                    <VBox spacing="20" style="-fx-padding: 20;">
+                        <!-- Titre -->
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="Tableau de Bord" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="🔄 Actualiser" onAction="#handleRefreshStats"
+                                    style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                        </HBox>
+
+                        <!-- Stats Principales -->
+                        <Label text="Statistiques Générales" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                        <GridPane hgap="15" vgap="15">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="20"/>
+                                <ColumnConstraints percentWidth="20"/>
+                                <ColumnConstraints percentWidth="20"/>
+                                <ColumnConstraints percentWidth="20"/>
+                                <ColumnConstraints percentWidth="20"/>
+                            </columnConstraints>
+
+                            <!-- Card Apprenants -->
+                            <VBox style="-fx-background-color: #3498db; -fx-background-radius: 10; -fx-padding: 20;"
+                                  GridPane.columnIndex="0">
+                                <Label text="👨‍🎓" style="-fx-font-size: 32px;"/>
+                                <Label fx:id="totalApprenantsLabel" text="0"
+                                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Apprenants" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+                            </VBox>
+
+                            <!-- Card Moniteurs -->
+                            <VBox style="-fx-background-color: #2ecc71; -fx-background-radius: 10; -fx-padding: 20;"
+                                  GridPane.columnIndex="1">
+                                <Label text="👨‍🏫" style="-fx-font-size: 32px;"/>
+                                <Label fx:id="totalMoniteursLabel" text="0"
+                                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Moniteurs" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+                            </VBox>
+
+                            <!-- Card Véhicules -->
+                            <VBox style="-fx-background-color: #9b59b6; -fx-background-radius: 10; -fx-padding: 20;"
+                                  GridPane.columnIndex="2">
+                                <Label text="🚗" style="-fx-font-size: 32px;"/>
+                                <Label fx:id="totalVehiculesLabel" text="0"
+                                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Véhicules" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+                            </VBox>
+
+                            <!-- Card Séances -->
+                            <VBox style="-fx-background-color: #e67e22; -fx-background-radius: 10; -fx-padding: 20;"
+                                  GridPane.columnIndex="3">
+                                <Label text="📅" style="-fx-font-size: 32px;"/>
+                                <Label fx:id="totalSeancesLabel" text="0"
+                                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Séances" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+                            </VBox>
+
+                            <!-- Card Examens -->
+                            <VBox style="-fx-background-color: #e74c3c; -fx-background-radius: 10; -fx-padding: 20;"
+                                  GridPane.columnIndex="4">
+                                <Label text="📝" style="-fx-font-size: 32px;"/>
+                                <Label fx:id="totalExamensLabel" text="0"
+                                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Examens" style="-fx-font-size: 14px; -fx-text-fill: white;"/>
+                            </VBox>
+                        </GridPane>
+
+                        <Separator/>
+
+                        <!-- Taux de Réussite -->
+                        <VBox spacing="10" style="-fx-background-color: #ecf0f1; -fx-background-radius: 10; -fx-padding: 20;">
+                            <Label text="📈 Taux de Réussite aux Examens"
+                                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                            <HBox alignment="CENTER" spacing="20">
+                                <Label text="Taux de Réussite Global:" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                                <Label fx:id="tauxReussiteLabel" text="0%"
+                                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                            </HBox>
+                        </VBox>
+
+                        <Separator/>
+
+                        <!-- Répartition par Niveau -->
+                        <Label text="📚 Répartition des Apprenants par Niveau"
+                               style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                        <GridPane hgap="15" vgap="15">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="25"/>
+                            </columnConstraints>
+
+                            <!-- Code -->
+                            <VBox style="-fx-background-color: #f39c12; -fx-background-radius: 10; -fx-padding: 15;"
+                                  GridPane.columnIndex="0">
+                                <Label text="📚" style="-fx-font-size: 28px;"/>
+                                <Label fx:id="apprenantsNiveauCodeLabel" text="0"
+                                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Code de la route" style="-fx-font-size: 13px; -fx-text-fill: white;"/>
+                            </VBox>
+
+                            <!-- Conduite -->
+                            <VBox style="-fx-background-color: #16a085; -fx-background-radius: 10; -fx-padding: 15;"
+                                  GridPane.columnIndex="1">
+                                <Label text="🚗" style="-fx-font-size: 28px;"/>
+                                <Label fx:id="apprenantsNiveauConduiteLabel" text="0"
+                                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Conduite" style="-fx-font-size: 13px; -fx-text-fill: white;"/>
+                            </VBox>
+
+                            <!-- Parc -->
+                            <VBox style="-fx-background-color: #8e44ad; -fx-background-radius: 10; -fx-padding: 15;"
+                                  GridPane.columnIndex="2">
+                                <Label text="🅿️" style="-fx-font-size: 28px;"/>
+                                <Label fx:id="apprenantsNiveauParcLabel" text="0"
+                                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Parc" style="-fx-font-size: 13px; -fx-text-fill: white;"/>
+                            </VBox>
+
+                            <!-- Permis Obtenus -->
+                            <VBox style="-fx-background-color: #27ae60; -fx-background-radius: 10; -fx-padding: 15;"
+                                  GridPane.columnIndex="3">
+                                <Label text="✅" style="-fx-font-size: 28px;"/>
+                                <Label fx:id="apprenantsPermisObtenusLabel" text="0"
+                                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                                <Label text="Permis Obtenus" style="-fx-font-size: 13px; -fx-text-fill: white;"/>
+                            </VBox>
+                        </GridPane>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- Tab Apprenants -->
+            <Tab text="👨‍🎓 Apprenants">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="searchApprenantField" promptText="Rechercher..." prefWidth="200"/>
+                        <ComboBox fx:id="filterTypePermisCombo" prefWidth="150"/>
+                        <ComboBox fx:id="filterNiveauCombo" prefWidth="150"/>
+                        <Button text="Filtrer" onAction="#loadApprenants"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="➕ Ajouter" onAction="#handleAddApprenant"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button text="✏️ Modifier" onAction="#handleEditApprenant"
+                                style="-fx-background-color: #f39c12; -fx-text-fill: white;"/>
+                        <Button text="🗑️ Supprimer" onAction="#handleDeleteApprenant"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <TableView fx:id="apprenantsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="apprenantIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="apprenantNomCol" text="Nom" prefWidth="120"/>
+                            <TableColumn fx:id="apprenantPrenomCol" text="Prénom" prefWidth="120"/>
+                            <TableColumn fx:id="apprenantCinCol" text="CIN" prefWidth="100"/>
+                            <TableColumn fx:id="apprenantEmailCol" text="Email" prefWidth="200"/>
+                            <TableColumn fx:id="apprenantTelCol" text="Téléphone" prefWidth="100"/>
+                            <TableColumn fx:id="apprenantTypePermisCol" text="Type Permis" prefWidth="120"/>
+                            <TableColumn fx:id="apprenantNiveauCol" text="Niveau" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Tab Moniteurs -->
+            <Tab text="👨‍🏫 Moniteurs">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="searchMoniteurField" promptText="Rechercher..." prefWidth="200"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="➕ Ajouter" onAction="#handleAddMoniteur"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button text="✏️ Modifier" onAction="#handleEditMoniteur"
+                                style="-fx-background-color: #f39c12; -fx-text-fill: white;"/>
+                        <Button text="🗑️ Supprimer" onAction="#handleDeleteMoniteur"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <TableView fx:id="moniteursTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="moniteurIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="moniteurNomCol" text="Nom" prefWidth="150"/>
+                            <TableColumn fx:id="moniteurPrenomCol" text="Prénom" prefWidth="150"/>
+                            <TableColumn fx:id="moniteurCinCol" text="CIN" prefWidth="120"/>
+                            <TableColumn fx:id="moniteurEmailCol" text="Email" prefWidth="250"/>
+                            <TableColumn fx:id="moniteurTelCol" text="Téléphone" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Tab Véhicules -->
+            <Tab text="🚗 Véhicules">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="searchVehiculeField" promptText="Rechercher..." prefWidth="200"/>
+                        <ComboBox fx:id="filterVehiculeTypeCombo" prefWidth="150"/>
+                        <Button text="Filtrer" onAction="#loadVehicules"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="➕ Ajouter" onAction="#handleAddVehicule"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button text="✏️ Modifier" onAction="#handleEditVehicule"
+                                style="-fx-background-color: #f39c12; -fx-text-fill: white;"/>
+                        <Button text="🗑️ Supprimer" onAction="#handleDeleteVehicule"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <TableView fx:id="vehiculesTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="vehiculeIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="vehiculeMatriculeCol" text="Matricule" prefWidth="150"/>
+                            <TableColumn fx:id="vehiculeMarqueCol" text="Marque" prefWidth="150"/>
+                            <TableColumn fx:id="vehiculeModeleCol" text="Modèle" prefWidth="150"/>
+                            <TableColumn fx:id="vehiculeTypeCol" text="Type" prefWidth="150"/>
+                            <TableColumn fx:id="vehiculeDispoCol" text="Disponible" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Tab Séances -->
+            <Tab text="📅 Séances">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="🔄 Actualiser" onAction="#loadSeances"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="➕ Ajouter Séance" onAction="#handleAddSeance"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button text="✏️ Modifier" onAction="#handleEditSeance"
+                                style="-fx-background-color: #f39c12; -fx-text-fill: white;"/>
+                        <Button text="🗑️ Supprimer" onAction="#handleDeleteSeance"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <TableView fx:id="seancesTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="seanceIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="seanceTypeCol" text="Type" prefWidth="100"/>
+                            <TableColumn fx:id="seanceDateCol" text="Date" prefWidth="120"/>
+                            <TableColumn fx:id="seanceHeureCol" text="Heure" prefWidth="100"/>
+                            <TableColumn fx:id="seanceApprenantCol" text="Apprenant" prefWidth="200"/>
+                            <TableColumn fx:id="seanceMoniteurCol" text="Moniteur" prefWidth="200"/>
+                            <TableColumn fx:id="seanceVehiculeCol" text="Véhicule" prefWidth="200"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Tab Examens -->
+            <Tab text="📝 Examens">
+                <VBox spacing="10" style="-fx-padding: 15;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="filterResultatCombo" prefWidth="150"/>
+                        <Button text="Filtrer" onAction="#loadExamens"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                        <Button text="🔄 Actualiser" onAction="#loadExamens"
+                                style="-fx-background-color: #16a085; -fx-text-fill: white;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="➕ Programmer Examen" onAction="#handleAddExamen"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button text="📊 Saisir Résultat" onAction="#handleSaisirResultat"
+                                style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button text="✏️ Modifier" onAction="#handleEditExamen"
+                                style="-fx-background-color: #f39c12; -fx-text-fill: white;"/>
+                        <Button text="🗑️ Supprimer" onAction="#handleDeleteExamen"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <TableView fx:id="examensTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="examenIdCol" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="examenTypeCol" text="Type" prefWidth="150"/>
+                            <TableColumn fx:id="examenDateCol" text="Date" prefWidth="120"/>
+                            <TableColumn fx:id="examenHeureCol" text="Heure" prefWidth="100"/>
+                            <TableColumn fx:id="examenApprenantCol" text="Apprenant" prefWidth="250"/>
+                            <TableColumn fx:id="examenResultatCol" text="Résultat" prefWidth="200"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- Tab Finances -->
+            <Tab text="💰 Finances">
+                <ScrollPane fitToWidth="true" style="-fx-background: white;">
+                    <VBox spacing="20" style="-fx-padding: 20;">
+                        <!-- Titre -->
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="Gestion Financière" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="🔄 Actualiser" onAction="#handleRefreshStats"
+                                    style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                        </HBox>
+
+                        <!-- Revenus Totaux -->
+                        <VBox spacing="15" style="-fx-background-color: #ecf0f1; -fx-background-radius: 10; -fx-padding: 20;">
+                            <Label text="💵 Revenus Totaux de l'Auto-École"
+                                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                            <Separator/>
+
+                            <GridPane hgap="30" vgap="15">
+                                <columnConstraints>
+                                    <ColumnConstraints percentWidth="50"/>
+                                    <ColumnConstraints percentWidth="50"/>
+                                </columnConstraints>
+
+                                <!-- Colonne 1 -->
+                                <VBox spacing="10" GridPane.columnIndex="0">
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <Label text="📋 Frais d'inscription:" style="-fx-font-size: 14px; -fx-min-width: 180px;"/>
+                                        <Label fx:id="revenuInscriptionsLabel" text="0.00 DT"
+                                               style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #3498db;"/>
+                                    </HBox>
+
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <Label text="📚 Séances Code:" style="-fx-font-size: 14px; -fx-min-width: 180px;"/>
+                                        <Label fx:id="revenuCodeLabel" text="0.00 DT"
+                                               style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #f39c12;"/>
+                                    </HBox>
+
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <Label text="🚗 Séances Conduite:" style="-fx-font-size: 14px; -fx-min-width: 180px;"/>
+                                        <Label fx:id="revenuConduiteLabel" text="0.00 DT"
+                                               style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #16a085;"/>
+                                    </HBox>
+                                </VBox>
+
+                                <!-- Colonne 2 -->
+                                <VBox spacing="10" GridPane.columnIndex="1">
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <Label text="🅿️ Séances Parc:" style="-fx-font-size: 14px; -fx-min-width: 180px;"/>
+                                        <Label fx:id="revenuParcLabel" text="0.00 DT"
+                                               style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #9b59b6;"/>
+                                    </HBox>
+
+                                    <HBox spacing="10" alignment="CENTER_LEFT">
+                                        <Label text="📝 Frais d'examens:" style="-fx-font-size: 14px; -fx-min-width: 180px;"/>
+                                        <Label fx:id="revenuExamensLabel" text="0.00 DT"
+                                               style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #e74c3c;"/>
+                                    </HBox>
+                                </VBox>
+                            </GridPane>
+
+                            <Separator/>
+
+                            <!-- Total -->
+                            <HBox spacing="20" alignment="CENTER"
+                                  style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8;">
+                                <Label text="REVENU TOTAL:"
+                                       style="-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #2c3e50;"/>
+                                <Label fx:id="revenuTotalLabel" text="0.00 DT"
+                                       style="-fx-font-weight: bold; -fx-font-size: 28px; -fx-text-fill: #27ae60;"/>
+                            </HBox>
+                        </VBox>
+
+                        <Separator/>
+
+                        <!-- Détails par Apprenant -->
+                        <VBox spacing="15">
+                            <Label text="👤 Détails par Apprenant"
+                                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Sélectionner un apprenant:" style="-fx-font-weight: bold;"/>
+                                <ComboBox fx:id="apprenantFinanceCombo" prefWidth="300" promptText="Choisir un apprenant"/>
+                                <Button text="📊 Afficher Détails" onAction="#handleAfficherDetailsApprenant"
+                                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                            </HBox>
+
+                            <!-- Zone d'affichage des détails -->
+                            <VBox fx:id="detailsApprenantBox" spacing="10"
+                                  style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;
+                                         -fx-border-color: #bdc3c7; -fx-border-width: 1; -fx-border-radius: 10;">
+                                <Label text="Sélectionnez un apprenant pour voir ses détails financiers"
+                                       style="-fx-text-fill: #7f8c8d; -fx-font-style: italic;"/>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>

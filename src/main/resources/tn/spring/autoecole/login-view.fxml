@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="tn.spring.autoecole.controllers.LoginController"
+            prefHeight="600.0" prefWidth="800.0"
+            style="-fx-background-color: #f5f5f5;">
+
+    <center>
+        <VBox alignment="CENTER" spacing="25" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 5);" maxWidth="400" maxHeight="500">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+
+            <!-- Logo/Title -->
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="🚗" style="-fx-font-size: 60px;"/>
+                <Label text="Auto-École" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label text="Système de Gestion" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+
+            <!-- Separator -->
+            <Separator prefWidth="300"/>
+
+            <!-- Form Fields -->
+            <VBox spacing="15">
+                <VBox spacing="5">
+                    <Label text="Email" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <TextField fx:id="emailField"
+                               promptText="Entrez votre email"
+                               style="-fx-pref-height: 40; -fx-font-size: 14px;"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Mot de passe" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <PasswordField fx:id="passwordField"
+                                   promptText="Entrez votre mot de passe"
+                                   style="-fx-pref-height: 40; -fx-font-size: 14px;"/>
+                </VBox>
+
+                <!-- Error Label -->
+                <Label fx:id="errorLabel"
+                       text="Erreur de connexion"
+                       style="-fx-text-fill: #e74c3c; -fx-font-size: 12px;"
+                       visible="false"/>
+            </VBox>
+
+            <!-- Buttons -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="loginButton"
+                        text="Se connecter"
+                        onAction="#handleLogin"
+                        defaultButton="true"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-pref-width: 150; -fx-pref-height: 40; -fx-cursor: hand;"/>
+
+                <Button text="Annuler"
+                        onAction="#handleCancel"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px; -fx-pref-width: 120; -fx-pref-height: 40; -fx-cursor: hand;"/>
+            </HBox>
+
+            <!-- Info -->
+            <VBox alignment="CENTER" spacing="5" style="-fx-padding: 20 0 0 0;">
+                <Label text="Super Admin par défaut:" style="-fx-font-size: 11px; -fx-text-fill: #95a5a6;"/>
+                <Label text="superadmin@gmail.com / superadmin123" style="-fx-font-size: 11px; -fx-text-fill: #3498db; -fx-font-weight: bold;"/>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>
