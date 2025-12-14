@@ -112,6 +112,12 @@ public class ExamenService {
             examen.setResultat(ResultatExamen.EN_ATTENTE);
         }
 
+        // Marquer les frais d'inscription comme payés lors de la première séance/examen
+        if (!apprenant.isFraisInscriptionPaye()) {
+            apprenant.setFraisInscriptionPaye(true);
+            userDAO.update(apprenant);
+        }
+
         // Sauvegarder
         return examenDAO.save(examen);
     }

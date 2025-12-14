@@ -109,6 +109,12 @@ public class SeanceService {
             }
         }
 
+        // Marquer les frais d'inscription comme payés lors de la première séance/examen
+        if (!apprenant.isFraisInscriptionPaye()) {
+            apprenant.setFraisInscriptionPaye(true);
+            userDAO.update(apprenant);
+        }
+
         return seanceDAO.save(seance);
     }
 

@@ -94,6 +94,8 @@ public class AdminController {
     @FXML private Label revenuConduiteLabel;
     @FXML private Label revenuParcLabel;
     @FXML private Label revenuExamensLabel;
+    @FXML private Label revenuAutoEcoleLabel;
+    @FXML private Label revenuServiceMinesLabel;
     @FXML private Label revenuTotalLabel;
     @FXML private ComboBox<User> apprenantFinanceCombo;
     @FXML private VBox detailsApprenantBox;
@@ -386,6 +388,7 @@ public class AdminController {
                 AlertUtils.showSuccess("Apprenant ajouté avec succès");
                 loadApprenants();
                 loadDashboardStats();
+                refreshApprenantFinanceCombo();
             } catch (SQLException | IllegalArgumentException e) {
                 AlertUtils.showError("Erreur", e.getMessage());
             }
@@ -407,6 +410,8 @@ public class AdminController {
                 AlertUtils.showSuccess("Apprenant modifié avec succès");
                 loadApprenants();
                 loadDashboardStats();
+                apprenantsTable.refresh();
+                refreshApprenantFinanceCombo();
             } catch (SQLException | IllegalArgumentException e) {
                 AlertUtils.showError("Erreur", e.getMessage());
             }
@@ -427,6 +432,7 @@ public class AdminController {
                 AlertUtils.showSuccess("Apprenant supprimé avec succès");
                 loadApprenants();
                 loadDashboardStats();
+                refreshApprenantFinanceCombo();
             } catch (SQLException e) {
                 AlertUtils.showError("Erreur", e.getMessage());
             }
@@ -463,6 +469,7 @@ public class AdminController {
                 userService.updateUser(result.get());
                 AlertUtils.showSuccess("Moniteur modifié avec succès");
                 loadMoniteurs();
+                moniteursTable.refresh();
             } catch (SQLException | IllegalArgumentException e) {
                 AlertUtils.showError("Erreur", e.getMessage());
             }
@@ -518,6 +525,7 @@ public class AdminController {
             try {
                 vehiculeService.updateVehicule(result.get());
                 AlertUtils.showSuccess("Véhicule modifié avec succès");
+                vehiculesTable.refresh();
                 loadVehicules();
             } catch (SQLException | IllegalArgumentException e) {
                 AlertUtils.showError("Erreur", e.getMessage());
@@ -719,6 +727,30 @@ public class AdminController {
         }
     }
 
+    private void refreshApprenantFinanceCombo() {
+        if (apprenantFinanceCombo != null) {
+            try {
+                // Sauvegarder la sélection actuelle
+                User selectedUser = apprenantFinanceCombo.getValue();
+
+                // Vider et recharger la liste
+                apprenantFinanceCombo.getItems().clear();
+                List<User> apprenants = userService.getAllApprenants();
+                apprenantFinanceCombo.getItems().addAll(apprenants);
+
+                // Restaurer la sélection si elle existe encore
+                if (selectedUser != null) {
+                    apprenantFinanceCombo.getItems().stream()
+                            .filter(u -> u.getId() == selectedUser.getId())
+                            .findFirst()
+                            .ifPresent(apprenantFinanceCombo::setValue);
+                }
+            } catch (SQLException e) {
+                AlertUtils.showError("Erreur", "Impossible de recharger les apprenants: " + e.getMessage());
+            }
+        }
+    }
+
     private void loadFinances() {
         try {
             Map<String, Double> revenus = financeService.calculerRevenuTotal();
@@ -737,6 +769,12 @@ public class AdminController {
             }
             if (revenuExamensLabel != null) {
                 revenuExamensLabel.setText(String.format("%.2f DT", revenus.get("total_examens")));
+            }
+            if (revenuAutoEcoleLabel != null) {
+                revenuAutoEcoleLabel.setText(String.format("%.2f DT", revenus.get("revenu_auto_ecole")));
+            }
+            if (revenuServiceMinesLabel != null) {
+                revenuServiceMinesLabel.setText(String.format("%.2f DT", revenus.get("revenu_service_mines")));
             }
             if (revenuTotalLabel != null) {
                 revenuTotalLabel.setText(String.format("%.2f DT", revenus.get("total_general")));
@@ -787,15 +825,15 @@ public class AdminController {
             grid.add(inscriptionLabel, 1, row++);
 
             // Heures et revenus Code
-            grid.add(new Label("📚 Code (" + String.format("%.1f", heures.get("code")) + "h):"), 0, row);
+            grid.add(new Label("📚 Code (" + String.format("%.1fh/%dh", heures.get("code"), selected.getHeuresPreveuesCode()) + "):"), 0, row);
             grid.add(new Label(String.format("%.2f DT", revenus.get("revenu_code"))), 1, row++);
 
             // Heures et revenus Conduite
-            grid.add(new Label("🚗 Conduite (" + String.format("%.1f", heures.get("conduite")) + "h):"), 0, row);
+            grid.add(new Label("🚗 Conduite (" + String.format("%.1fh/%dh", heures.get("conduite"), selected.getHeuresPreveuesConduite()) + "):"), 0, row);
             grid.add(new Label(String.format("%.2f DT", revenus.get("revenu_conduite"))), 1, row++);
 
             // Heures et revenus Parc
-            grid.add(new Label("🅿️ Parc (" + String.format("%.1f", heures.get("parc")) + "h):"), 0, row);
+            grid.add(new Label("🅿️ Parc (" + String.format("%.1fh/%dh", heures.get("parc"), selected.getHeuresPreveuesParc()) + "):"), 0, row);
             grid.add(new Label(String.format("%.2f DT", revenus.get("revenu_parc"))), 1, row++);
 
             // Examens

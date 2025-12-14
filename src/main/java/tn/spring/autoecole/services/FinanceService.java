@@ -209,7 +209,15 @@ public class FinanceService {
 
         revenus.put("total_examens", totalExamens);
 
-        // Total général
+        // Revenus pour le service des mines (frais d'inscription + examens)
+        double revenuServiceDesMines = totalInscriptions + totalExamens;
+        revenus.put("revenu_service_mines", revenuServiceDesMines);
+
+        // Revenu total de l'auto-école (uniquement les séances)
+        double revenuAutoEcole = totalCode + totalConduite + totalParc;
+        revenus.put("revenu_auto_ecole", revenuAutoEcole);
+
+        // Total général (tout confondu)
         double total = totalInscriptions + totalCode + totalConduite + totalParc + totalExamens;
         revenus.put("total_general", total);
 
