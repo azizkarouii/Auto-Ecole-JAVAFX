@@ -131,6 +131,7 @@ public class AdminController {
         setupSeancesTab();
         setupExamensTab();
         setupFinancesTab();
+        setupSearchListeners();
         loadAllData();
         loadDashboardStats();
         loadFinances();
@@ -140,6 +141,65 @@ public class AdminController {
         User currentUser = Session.getInstance().getCurrentUser();
         if (currentUser != null) {
             welcomeLabel.setText("Bienvenue, " + currentUser.getNomComplet() + " (Administrateur)");
+        }
+    }
+
+    private void setupSearchListeners() {
+        // Recherche apprenants
+        if (searchApprenantField != null) {
+            searchApprenantField.textProperty().addListener((observable, oldValue, newValue) -> {
+                searchApprenants();
+            });
+        }
+
+        // Filtres apprenants
+        if (filterTypePermisCombo != null) {
+            filterTypePermisCombo.setOnAction(e -> loadApprenants());
+        }
+        if (filterNiveauCombo != null) {
+            filterNiveauCombo.setOnAction(e -> loadApprenants());
+        }
+
+        // Filtre véhicules
+        if (filterVehiculeTypeCombo != null) {
+            filterVehiculeTypeCombo.setOnAction(e -> loadVehicules());
+        }
+
+        // Filtre examens
+        if (filterResultatCombo != null) {
+            filterResultatCombo.setOnAction(e -> loadExamens());
+        }
+    }
+
+    private void searchApprenants() {
+        if (searchApprenantField == null || apprenantsData == null) return;
+
+        String searchText = searchApprenantField.getText().toLowerCase().trim();
+
+        if (searchText.isEmpty()) {
+            loadApprenants();
+            return;
+        }
+
+        try {
+            TypePermis typeFilter = filterTypePermisCombo != null ? filterTypePermisCombo.getValue() : null;
+            Niveau niveauFilter = filterNiveauCombo != null ? filterNiveauCombo.getValue() : null;
+
+            List<User> filteredList = userService.getApprenantsFiltered(typeFilter, niveauFilter)
+                    .stream()
+                    .filter(apprenant ->
+                            apprenant.getNom().toLowerCase().contains(searchText) ||
+                                    apprenant.getPrenom().toLowerCase().contains(searchText) ||
+                                    apprenant.getCin().toLowerCase().contains(searchText) ||
+                                    apprenant.getMail().toLowerCase().contains(searchText) ||
+                                    apprenant.getNumTel().contains(searchText)
+                    )
+                    .toList();
+
+            apprenantsData = FXCollections.observableArrayList(filteredList);
+            apprenantsTable.setItems(apprenantsData);
+        } catch (SQLException e) {
+            AlertUtils.showError("Erreur", "Erreur lors de la recherche: " + e.getMessage());
         }
     }
 

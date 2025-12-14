@@ -62,9 +62,96 @@ public class SuperAdminController {
         setupWelcomeLabel();
         setupAdminsTab();
         setupAllUsersTab();
+        setupSearchListeners();
         loadDashboardStats();
         loadAdmins();
         loadAllUsers();
+    }
+
+    private void setupSearchListeners() {
+        // Recherche admins en temps réel
+        if (searchAdminField != null) {
+            searchAdminField.textProperty().addListener((observable, oldValue, newValue) -> {
+                searchAdmins();
+            });
+        }
+
+        // Recherche tous utilisateurs en temps réel
+        if (searchAllUsersField != null) {
+            searchAllUsersField.textProperty().addListener((observable, oldValue, newValue) -> {
+                searchAllUsers();
+            });
+        }
+
+        // Filtre rôle
+        if (filterRoleCombo != null) {
+            filterRoleCombo.setOnAction(e -> loadAllUsers());
+        }
+    }
+
+    private void searchAdmins() {
+        if (searchAdminField == null || adminsData == null) return;
+
+        String searchText = searchAdminField.getText().toLowerCase().trim();
+
+        if (searchText.isEmpty()) {
+            loadAdmins();
+            return;
+        }
+
+        try {
+            List<User> filteredList = userService.getAllAdmins()
+                    .stream()
+                    .filter(admin ->
+                            admin.getNom().toLowerCase().contains(searchText) ||
+                                    admin.getPrenom().toLowerCase().contains(searchText) ||
+                                    admin.getCin().toLowerCase().contains(searchText) ||
+                                    admin.getMail().toLowerCase().contains(searchText) ||
+                                    admin.getNumTel().contains(searchText)
+                    )
+                    .toList();
+
+            adminsData = FXCollections.observableArrayList(filteredList);
+            adminsTable.setItems(adminsData);
+        } catch (SQLException e) {
+            AlertUtils.showError("Erreur", "Erreur lors de la recherche: " + e.getMessage());
+        }
+    }
+
+    private void searchAllUsers() {
+        if (searchAllUsersField == null || allUsersData == null) return;
+
+        String searchText = searchAllUsersField.getText().toLowerCase().trim();
+
+        if (searchText.isEmpty()) {
+            loadAllUsers();
+            return;
+        }
+
+        try {
+            Role roleFilter = filterRoleCombo != null ? filterRoleCombo.getValue() : null;
+
+            List<User> allUsers = roleFilter != null ?
+                    userService.getAllUsers().stream()
+                            .filter(u -> u.getRole() == roleFilter)
+                            .toList() :
+                    userService.getAllUsers();
+
+            List<User> filteredList = allUsers.stream()
+                    .filter(user ->
+                            user.getNom().toLowerCase().contains(searchText) ||
+                                    user.getPrenom().toLowerCase().contains(searchText) ||
+                                    user.getCin().toLowerCase().contains(searchText) ||
+                                    user.getMail().toLowerCase().contains(searchText) ||
+                                    user.getNumTel().contains(searchText)
+                    )
+                    .toList();
+
+            allUsersData = FXCollections.observableArrayList(filteredList);
+            allUsersTable.setItems(allUsersData);
+        } catch (SQLException e) {
+            AlertUtils.showError("Erreur", "Erreur lors de la recherche: " + e.getMessage());
+        }
     }
 
     private void setupWelcomeLabel() {

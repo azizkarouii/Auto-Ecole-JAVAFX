@@ -75,7 +75,27 @@ public class MoniteurController {
         setupSeancesTab();
         setupApprenantsTab();
         setupVehiculesTab();
+        setupSearchListeners();
         loadAllData();
+    }
+
+    private void setupSearchListeners() {
+        // Recherche apprenants en temps réel
+        if (searchApprenantField != null) {
+            searchApprenantField.textProperty().addListener((observable, oldValue, newValue) -> {
+                searchApprenants();
+            });
+        }
+
+        // Filtre niveau apprenants
+        if (filterNiveauCombo != null) {
+            filterNiveauCombo.setOnAction(e -> loadApprenants());
+        }
+
+        // Filtre type véhicules
+        if (filterVehiculeTypeCombo != null) {
+            filterVehiculeTypeCombo.setOnAction(e -> loadVehicules());
+        }
     }
 
     private void setupWelcomeLabel() {
