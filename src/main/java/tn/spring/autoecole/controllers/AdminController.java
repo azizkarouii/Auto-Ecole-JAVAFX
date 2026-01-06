@@ -57,6 +57,7 @@ public class AdminController {
     @FXML private TableColumn<User, String> moniteurCinCol;
     @FXML private TableColumn<User, String> moniteurEmailCol;
     @FXML private TableColumn<User, String> moniteurTelCol;
+    @FXML private TextField searchMoniteurField;
 
     // Tab Véhicules
     @FXML private TableView<Vehicule> vehiculesTable;
@@ -66,6 +67,7 @@ public class AdminController {
     @FXML private TableColumn<Vehicule, String> vehiculeModeleCol;
     @FXML private TableColumn<Vehicule, String> vehiculeTypeCol;
     @FXML private TableColumn<Vehicule, Boolean> vehiculeDispoCol;
+    @FXML private TextField searchVehiculeField;
     @FXML private ComboBox<TypePermis> filterVehiculeTypeCombo;
 
     // Tab Séances
@@ -152,6 +154,20 @@ public class AdminController {
             });
         }
 
+        // Recherche moniteurs
+        if (searchMoniteurField != null) {
+            searchMoniteurField.textProperty().addListener((observable, oldValue, newValue) -> {
+                searchMoniteurs();
+            });
+        }
+
+        // Recherche véhicules
+        if (searchVehiculeField != null) {
+            searchVehiculeField.textProperty().addListener((observable, oldValue, newValue) -> {
+                searchVehicules();
+            });
+        }
+
         // Filtres apprenants
         if (filterTypePermisCombo != null) {
             filterTypePermisCombo.setOnAction(e -> loadApprenants());
@@ -198,6 +214,67 @@ public class AdminController {
 
             apprenantsData = FXCollections.observableArrayList(filteredList);
             apprenantsTable.setItems(apprenantsData);
+        } catch (SQLException e) {
+            AlertUtils.showError("Erreur", "Erreur lors de la recherche: " + e.getMessage());
+        }
+    }
+
+    private void searchMoniteurs() {
+        if (searchMoniteurField == null || moniteursData == null) return;
+
+        String searchText = searchMoniteurField.getText().toLowerCase().trim();
+
+        if (searchText.isEmpty()) {
+            loadMoniteurs();
+            return;
+        }
+
+        try {
+            List<User> filteredList = userService.getAllMoniteurs()
+                    .stream()
+                    .filter(moniteur ->
+                            moniteur.getNom().toLowerCase().contains(searchText) ||
+                                    moniteur.getPrenom().toLowerCase().contains(searchText) ||
+                                    moniteur.getCin().toLowerCase().contains(searchText) ||
+                                    moniteur.getMail().toLowerCase().contains(searchText) ||
+                                    moniteur.getNumTel().contains(searchText)
+                    )
+                    .toList();
+
+            moniteursData = FXCollections.observableArrayList(filteredList);
+            moniteursTable.setItems(moniteursData);
+        } catch (SQLException e) {
+            AlertUtils.showError("Erreur", "Erreur lors de la recherche: " + e.getMessage());
+        }
+    }
+
+    private void searchVehicules() {
+        if (searchVehiculeField == null || vehiculesData == null) return;
+
+        String searchText = searchVehiculeField.getText().toLowerCase().trim();
+
+        if (searchText.isEmpty()) {
+            loadVehicules();
+            return;
+        }
+
+        try {
+            TypePermis typeFilter = filterVehiculeTypeCombo != null ? filterVehiculeTypeCombo.getValue() : null;
+
+            List<Vehicule> allVehicules = typeFilter != null ?
+                    vehiculeService.getVehiculesByType(typeFilter) :
+                    vehiculeService.getAllVehicules();
+
+            List<Vehicule> filteredList = allVehicules.stream()
+                    .filter(vehicule ->
+                            vehicule.getMatricule().toLowerCase().contains(searchText) ||
+                                    vehicule.getMarque().toLowerCase().contains(searchText) ||
+                                    vehicule.getModele().toLowerCase().contains(searchText)
+                    )
+                    .toList();
+
+            vehiculesData = FXCollections.observableArrayList(filteredList);
+            vehiculesTable.setItems(vehiculesData);
         } catch (SQLException e) {
             AlertUtils.showError("Erreur", "Erreur lors de la recherche: " + e.getMessage());
         }

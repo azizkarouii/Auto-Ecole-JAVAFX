@@ -16,7 +16,6 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
 
-        // Tester la connexion à la base de données
         try {
             SingletonConnection.getInstance();
             System.out.println("✓ Application démarrée avec succès");
@@ -26,7 +25,6 @@ public class HelloApplication extends Application {
             return;
         }
 
-        // Charger l'écran de connexion
         showLoginView();
 
         stage.setTitle("Auto-École - Système de Gestion");

@@ -32,13 +32,10 @@ public class FinanceService {
         this.examenDAO = new ExamenDAO();
     }
 
-    /**
-     * Calcule le revenu total pour un apprenant donné
-     */
+
     public Map<String, Double> calculerRevenuApprenant(int apprenantId) throws SQLException {
         Map<String, Double> revenus = new HashMap<>();
 
-        // 1. Frais d'inscription
         User apprenant = userDAO.findById(apprenantId).orElse(null);
         double fraisInscription = (apprenant != null && apprenant.isFraisInscriptionPaye()) ?
                 FRAIS_INSCRIPTION : 0.0;
@@ -80,7 +77,6 @@ public class FinanceService {
         revenus.put("heures_conduite", heuresConduite);
         revenus.put("heures_parc", heuresParc);
 
-        // 3. Frais d'examens
         List<Examen> examens = examenDAO.findByApprenant(apprenantId);
         double fraisExamens = 0.0;
         int nbExamensCode = 0;
@@ -111,23 +107,17 @@ public class FinanceService {
         revenus.put("nb_examens_conduite", (double) nbExamensConduite);
         revenus.put("nb_examens_parc", (double) nbExamensParc);
 
-        // 4. Total
         double total = fraisInscription + revenuCode + revenuConduite + revenuParc + fraisExamens;
         revenus.put("total", total);
 
         return revenus;
     }
 
-    /**
-     * Calcule le coût total prévu pour un apprenant selon ses heures prévues
-     */
     public Map<String, Double> calculerCoutPrevu(User apprenant) {
         Map<String, Double> couts = new HashMap<>();
 
-        // Frais d'inscription
         couts.put("frais_inscription", FRAIS_INSCRIPTION);
 
-        // Coût des séances prévues
         double coutCode = apprenant.getHeuresPreveuesCode() * TARIF_HEURE_CODE;
         double coutConduite = apprenant.getHeuresPreveuesConduite() * TARIF_HEURE_CONDUITE;
         double coutParc = apprenant.getHeuresPreveuesParc() * TARIF_HEURE_PARC;
@@ -136,11 +126,10 @@ public class FinanceService {
         couts.put("cout_conduite", coutConduite);
         couts.put("cout_parc", coutParc);
 
-        // Frais d'examens (1 examen par phase minimum)
         double fraisExamens = FRAIS_EXAMEN_CODE + FRAIS_EXAMEN_CONDUITE + FRAIS_EXAMEN_PARC;
         couts.put("frais_examens_prevus", fraisExamens);
 
-        // Total prévu
+
         double total = FRAIS_INSCRIPTION + coutCode + coutConduite + coutParc + fraisExamens;
         couts.put("total_prevu", total);
 
@@ -153,14 +142,12 @@ public class FinanceService {
     public Map<String, Double> calculerRevenuTotal() throws SQLException {
         Map<String, Double> revenus = new HashMap<>();
 
-        // Total frais d'inscription
         List<User> apprenants = userDAO.findApprenants();
         double totalInscriptions = apprenants.stream()
                 .filter(User::isFraisInscriptionPaye)
                 .count() * FRAIS_INSCRIPTION;
         revenus.put("total_inscriptions", totalInscriptions);
 
-        // Total séances
         List<Seance> seances = seanceDAO.findAll();
         double totalCode = 0.0;
         double totalConduite = 0.0;
@@ -187,7 +174,6 @@ public class FinanceService {
         revenus.put("total_conduite", totalConduite);
         revenus.put("total_parc", totalParc);
 
-        // Total examens
         List<Examen> examens = examenDAO.findAll();
         double totalExamens = 0.0;
 
@@ -209,24 +195,19 @@ public class FinanceService {
 
         revenus.put("total_examens", totalExamens);
 
-        // Revenus pour le service des mines (frais d'inscription + examens)
         double revenuServiceDesMines = totalInscriptions + totalExamens;
         revenus.put("revenu_service_mines", revenuServiceDesMines);
 
-        // Revenu total de l'auto-école (uniquement les séances)
         double revenuAutoEcole = totalCode + totalConduite + totalParc;
         revenus.put("revenu_auto_ecole", revenuAutoEcole);
 
-        // Total général (tout confondu)
         double total = totalInscriptions + totalCode + totalConduite + totalParc + totalExamens;
         revenus.put("total_general", total);
 
         return revenus;
     }
 
-    /**
-     * Calcule les heures effectuées par un apprenant
-     */
+
     public Map<String, Double> calculerHeuresEffectuees(int apprenantId) throws SQLException {
         Map<String, Double> heures = new HashMap<>();
 
@@ -260,9 +241,7 @@ public class FinanceService {
         return heures;
     }
 
-    /**
-     * Calcule le pourcentage de progression pour chaque phase
-     */
+
     public Map<String, Double> calculerProgressionHeures(User apprenant, int apprenantId) throws SQLException {
         Map<String, Double> progression = new HashMap<>();
         Map<String, Double> heuresEffectuees = calculerHeuresEffectuees(apprenantId);

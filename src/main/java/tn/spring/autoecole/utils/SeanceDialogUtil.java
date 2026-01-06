@@ -179,8 +179,8 @@ public class SeanceDialogUtil {
         // Véhicule
         ComboBox<Vehicule> vehiculeCombo = new ComboBox<>();
         vehiculeCombo.setPromptText("Sélectionner un véhicule");
-        // Ajouter l'option "Aucun"
-        vehiculeCombo.getItems().add(null);
+
+       vehiculeCombo.getItems().add(null);
         vehiculeCombo.setCellFactory(lv -> new ListCell<Vehicule>() {
             @Override
             protected void updateItem(Vehicule v, boolean empty) {
@@ -209,7 +209,6 @@ public class SeanceDialogUtil {
             }
         });
 
-        // Logique pour afficher/masquer moniteur et véhicule selon le type
         typeCombo.setOnAction(e -> {
             TypeSeance selectedType = typeCombo.getValue();
             boolean needsMoniteurAndVehicule = selectedType != null &&
@@ -223,13 +222,11 @@ public class SeanceDialogUtil {
                 vehiculeCombo.setValue(null);
             }
 
-            // Filtrer les apprenants selon le type de séance sélectionné
             if (selectedType != null) {
                 try {
                     List<User> allApprenants = userService.getAllApprenants();
                     apprenantCombo.getItems().clear();
 
-                    // Filtrer selon le niveau correspondant au type de séance
                     Niveau niveauRequis = selectedType.getCorrespondingNiveau();
                     List<User> apprenantsFiltered = allApprenants.stream()
                             .filter(a -> a.getNiveau() == niveauRequis)

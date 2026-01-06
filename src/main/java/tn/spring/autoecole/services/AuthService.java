@@ -18,10 +18,6 @@ public class AuthService {
         this.userDAO = new UserDAO();
     }
 
-    /**
-     * Authentifie un utilisateur
-     * @return L'utilisateur authentifié ou Optional.empty() si échec
-     */
     public Optional<User> login(String email, String password) throws SQLException {
         // Vérification des champs vides
         if (email == null || email.trim().isEmpty() ||
@@ -53,30 +49,22 @@ public class AuthService {
         return Optional.empty();
     }
 
-    /**
-     * Déconnecte l'utilisateur actuel
-     */
+
     public void logout() {
         Session.getInstance().clearSession();
     }
 
-    /**
-     * Vérifie si un utilisateur est connecté
-     */
+
     public boolean isAuthenticated() {
         return Session.getInstance().isLoggedIn();
     }
 
-    /**
-     * Récupère l'utilisateur actuellement connecté
-     */
+
     public User getCurrentUser() {
         return Session.getInstance().getCurrentUser();
     }
 
-    /**
-     * Change le mot de passe d'un utilisateur
-     */
+
     public void changePassword(int userId, String oldPassword, String newPassword)
             throws SQLException, IllegalArgumentException {
 
